@@ -1,13 +1,15 @@
-let selectFrom = document.getElementById('select1');
-let selectTo = document.getElementById('select2');
-let optionsFrom = document.querySelectorAll('#option1 .option');
-let selectValueFrom = document.querySelector('#select1 .select_value');
-let selectValueTo = document.querySelector('#select2 .select_value');
-let optionFrom = document.getElementById('option1');
-let optionsTo = document.querySelectorAll('#option2 .option');
-let optionTo = document.getElementById('option2');
-let fromValue = document.querySelector('.from input');
-let toValue = document.querySelector('.to input');
+const selectFrom = document.getElementById('select1');
+const selectTo = document.getElementById('select2');
+const optionsFrom = document.querySelectorAll('#option1 .option');
+const selectValueFrom = document.querySelector('#select1 .select_value');
+const selectValueTo = document.querySelector('#select2 .select_value');
+const optionFrom = document.getElementById('option1');
+const optionsTo = document.querySelectorAll('#option2 .option');
+const optionTo = document.getElementById('option2');
+const fromValue = document.querySelector('.from input');
+const toValue = document.querySelector('.to input');
+const themeToggle = document.getElementById('slider');
+
 document.addEventListener('click', function(evt) {
     if (!selectFrom.contains(evt.target)) {
         if (toggleFrom) {
@@ -45,9 +47,16 @@ function openOptionFrom() {
 function selectOptionFrom() {
     for (let i = 0; i < optionsFrom.length; i++) {
         const element = optionsFrom[i];
-        element.addEventListener('click', function(evt) {
-            selectValueFrom.innerText = element.innerText;
-            convertFrom();
+        element.addEventListener('click', function() {
+            if (element.innerText == selectValueTo.innerText) {
+                // Swap from and to element if both are same on slect
+                selectValueTo.innerText = selectValueFrom.innerText;
+                selectValueFrom.innerText = element.innerText;
+                convertFrom();
+            } else {
+                selectValueFrom.innerText = element.innerText;
+                convertFrom();
+            }
         })
     }
 }
@@ -61,53 +70,61 @@ function convertFrom() {
     }
 
     if (selectValueFrom.innerText == 'Pound' && selectValueTo.innerText == 'Kilogram') {
-        toValue.value = (fromValue.value / 2.205);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value / 2.205);
     } else if (selectValueFrom.innerText == 'Pound' && selectValueTo.innerText == 'Tonne') {
-        toValue.value = (fromValue.value / 2205);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value / 2205);
     } else if (selectValueFrom.innerText == 'Pound' && selectValueTo.innerText == 'Gram') {
-        toValue.value = (fromValue.value * 454);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value * 454);
     } else if (selectValueFrom.innerText == 'Pound' && selectValueTo.innerText == 'Ounce') {
-        toValue.value = (fromValue.value * 16);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value * 16);
     }
 
     if (selectValueFrom.innerText == 'Kilogram' && selectValueTo.innerText == 'Pound') {
-        toValue.value = (fromValue.value * 2.205);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value * 2.205);
     } else if (selectValueFrom.innerText == 'Kilogram' && selectValueTo.innerText == 'Tonne') {
-        toValue.value = (fromValue.value / 1000);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value / 1000);
     } else if (selectValueFrom.innerText == 'Kilogram' && selectValueTo.innerText == 'Gram') {
-        toValue.value = (fromValue.value * 1000);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value * 1000);
     } else if (selectValueFrom.innerText == 'Kilogram' && selectValueTo.innerText == 'Ounce') {
-        toValue.value = (fromValue.value * 35.274);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value * 35.274);
     }
 
     if (selectValueFrom.innerText == 'Tonne' && selectValueTo.innerText == 'Pound') {
-        toValue.value = (fromValue.value * 2205);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value * 2205);
     } else if (selectValueFrom.innerText == 'Tonne' && selectValueTo.innerText == 'Kilogram') {
-        toValue.value = (fromValue.value * 1000);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value * 1000);
     } else if (selectValueFrom.innerText == 'Tonne' && selectValueTo.innerText == 'Gram') {
-        toValue.value = (fromValue.value * 1e+6);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value * 1e+6);
     } else if (selectValueFrom.innerText == 'Tonne' && selectValueTo.innerText == 'Ounce') {
-        toValue.value = (fromValue.value * 35274);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value * 35274);
     }
 
     if (selectValueFrom.innerText == 'Gram' && selectValueTo.innerText == 'Pound') {
-        toValue.value = (fromValue.value * 454);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value * 454);
     } else if (selectValueFrom.innerText == 'Gram' && selectValueTo.innerText == 'Kilogram') {
-        toValue.value = (fromValue.value / 1000);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value / 1000);
     } else if (selectValueFrom.innerText == 'Gram' && selectValueTo.innerText == 'Tonne') {
-        toValue.value = (fromValue.value / 1e+6);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value / 1e+6);
     } else if (selectValueFrom.innerText == 'Gram' && selectValueTo.innerText == 'Ounce') {
-        toValue.value = (fromValue.value / 28.35);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value / 28.35);
     }
 
     if (selectValueFrom.innerText == 'Ounce' && selectValueTo.innerText == 'Pound') {
-        toValue.value = (fromValue.value / 16);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value / 16);
     } else if (selectValueFrom.innerText == 'Ounce' && selectValueTo.innerText == 'Kilogram') {
-        toValue.value = (fromValue.value / 35.274);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value / 35.274);
     } else if (selectValueFrom.innerText == 'Ounce' && selectValueTo.innerText == 'Tonne') {
-        toValue.value = (fromValue.value / 35274);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value / 35274);
     } else if (selectValueFrom.innerText == 'Ounce' && selectValueTo.innerText == 'Gram') {
-        toValue.value = (fromValue.value * 28.35);
+        toValue.value = checkIfContainsDecimalAndTruncate(fromValue.value * 28.35);
+    }
+}
+
+function checkIfContainsDecimalAndTruncate(value) {
+    if (String(value).indexOf('.') == -1) {
+        return value;
+    } else {
+        return value.toFixed(6)
     }
 }
 
@@ -133,6 +150,7 @@ function selectOptionTo() {
         const element = optionsTo[i];
         element.addEventListener('click', function() {
             if (element.innerText == selectValueFrom.innerText) {
+                // Swap from and to element if both are same on slect
                 selectValueFrom.innerText = selectValueTo.innerText;
                 selectValueTo.innerText = element.innerText;
                 convertFrom()
@@ -143,3 +161,29 @@ function selectOptionTo() {
         })
     }
 }
+
+//theme toggler
+themeToggle.addEventListener('change', toggelTheme);
+
+function setTheme(themeName) {
+    localStorage.setItem('theme', themeName);
+    document.documentElement.className = themeName;
+}
+
+function toggelTheme() {
+    if (localStorage.getItem('theme') == 'theme-dark') {
+        setTheme('theme-light')
+    } else {
+        setTheme('theme-dark')
+    }
+}
+
+(function() {
+    if (localStorage.getItem('theme') === 'theme-dark') {
+        setTheme('theme-dark');
+        document.getElementById('slider').checked = false;
+    } else {
+        setTheme('theme-light');
+        document.getElementById('slider').checked = true;
+    }
+})();
